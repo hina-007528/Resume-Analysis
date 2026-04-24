@@ -1,0 +1,52 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Frontend: Next.js dev server",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Backend: FastAPI (uvicorn)",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "cwd": "${workspaceFolder}/backend",
+      "args": [
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload"
+      ],
+      "justMyCode": true
+    },
+    {
+      "name": "Backend: Attach debugpy (Docker/remote)",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/backend",
+          "remoteRoot": "/app"
+        }
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full stack debug",
+      "configurations": [
+        "Frontend: Next.js dev server",
+        "Backend: FastAPI (uvicorn)"
+      ]
+    }
+  ]
+}

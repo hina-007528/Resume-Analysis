@@ -1,0 +1,43 @@
+/* GSAP and Custom HUD Animations */
+
+.glow-primary {
+  filter: drop-shadow(0 0 10px rgba(0, 245, 255, 0.5));
+}
+
+.glow-secondary {
+  filter: drop-shadow(0 0 10px rgba(123, 47, 255, 0.5));
+}
+
+.text-reveal {
+  overflow: hidden;
+  display: block;
+}
+
+.text-reveal span {
+  display: block;
+  transform: translateY(100%);
+}
+
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

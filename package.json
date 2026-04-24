@@ -3,24 +3,56 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "concurrently -k \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "python -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload --app-dir backend",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:backend": "python -m compileall backend/app",
+    "start": "npm --prefix frontend run start",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "eslint . && prettier --check .",
+    "lint:backend": "python -m ruff check backend && python -m black --check backend",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "vitest run",
+    "test:backend": "cd backend && pytest --asyncio-mode=auto --cov=app --cov-report=html -v",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.0",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.104.0",
+    "axios": "^1.15.2",
+    "clsx": "^2.1.1",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.8.0",
     "next": "16.2.4",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-dropzone": "^15.0.0",
+    "tailwind-merge": "^3.5.0",
+    "three": "^0.184.0",
+    "winston": "^3.18.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "jsdom": "^27.0.1",
+    "msw": "^2.11.5",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.2"
   }
 }

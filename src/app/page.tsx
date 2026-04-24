@@ -1,65 +1,101 @@
-import Image from "next/image";
+"use client";
+
+import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useRef } from "react";
+import { ParticleField } from "@/components/three/ParticleField";
+import { HeroDocument } from "@/components/three/HeroDocument";
+import { GSAPProvider } from "@/components/gsap/GSAPProvider";
+import Link from "next/link";
+import gsap from "gsap";
+import { Rocket, ShieldCheck, Activity, Globe } from "lucide-react";
+
 
 export default function Home() {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const tl = gsap.timeline();
+    
+    tl.fromTo(titleRef.current, 
+      { y: 50, opacity: 0, filter: "blur(10px)" },
+      { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power4.out", delay: 0.5 }
+    )
+    .fromTo(subtitleRef.current,
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+      "-=0.8"
+    )
+    .fromTo(".btn-reveal",
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, stagger: 0.2, ease: "back.out(1.7)" },
+      "-=0.6"
+    );
+  }, []);
+
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      {/* 3D Background */}
+      <div className="absolute inset-0 z-0">
+        <Canvas>
+          <Suspense fallback={null}>
+            <ParticleField />
+            <HeroDocument />
+          </Suspense>
+        </Canvas>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <div className="inline-block px-3 py-1 mb-6 border border-[var(--primary)] rounded-full text-[10px] font-[family-name:var(--font-jetbrains)] text-[var(--primary)] uppercase tracking-widest animate-pulse">
+         AI Resume Analyzer Neural Engine v1.0.4
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        
+        <h1 ref={titleRef} className="text-4xl sm:text-6xl md:text-8xl mb-6 leading-tight sm:leading-none">
+          Precision <span className="text-[var(--primary)]">Matching</span> <br className="hidden sm:block" />
+          For Next-Gen <span className="text-[var(--secondary)]">Talent</span>
+        </h1>
+        
+        <p ref={subtitleRef} className="text-base sm:text-lg md:text-xl text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto font-[family-name:var(--font-instrument)]">
+          The industry's first AI resume analyzer using neural semantic matching. 
+          Upload your resume and bridge the gap between your skills and your dream job.
+        </p>
+
+        
+        <div ref={ctaRef} className="flex flex-col sm:flex-row gap-6 justify-center">
+          <Link 
+            href="/analyze" 
+            className="btn-reveal btn-primary"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <span className="relative z-10 flex items-center gap-2">
+              <Rocket className="w-4 h-4" />
+              Start Analysis
+            </span>
+          </Link>
+          
+          <Link 
+            href="/login" 
+            className="btn-reveal btn-glass"
           >
-            Documentation
-          </a>
+            Sign In to History
+          </Link>
         </div>
-      </main>
-    </div>
+
+
+      </div>
+
+      {/* HUD Elements */}
+      <div className="absolute bottom-10 left-10 hidden lg:block border-l-2 border-[var(--primary)] pl-4 opacity-50">
+        <div className="text-[10px] font-[family-name:var(--font-jetbrains)] text-[var(--primary)] uppercase">Coordinates</div>
+        <div className="text-xs">40.7128° N, 74.0060° W</div>
+      </div>
+      
+      <div className="absolute bottom-10 right-10 hidden lg:block border-r-2 border-[var(--secondary)] pr-4 text-right opacity-50">
+        <div className="text-[10px] font-[family-name:var(--font-jetbrains)] text-[var(--secondary)] uppercase">Status</div>
+        <div className="text-xs">SYSTEMS OPERATIONAL</div>
+      </div>
+    </main>
   );
 }
