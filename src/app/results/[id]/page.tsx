@@ -27,8 +27,12 @@ export default function ResultsPage() {
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
 
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL?.startsWith("http")
+          ? process.env.NEXT_PUBLIC_API_URL
+          : `https://${process.env.NEXT_PUBLIC_API_URL}`;
+
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/analysis/${analysisId}`,
+          `${apiUrl}/api/v1/analysis/${analysisId}`,
           {
             headers: user ? { "X-User-ID": user.id } : {}
           }
@@ -104,7 +108,8 @@ export default function ResultsPage() {
       // For maximum compatibility with download managers (like IDM), 
       // we use a direct link with a query parameter for authentication.
       // This prevents IDM from intercepting and breaking a fetch/blob request.
-      const downloadUrl = new URL(`${apiUrl}/api/v1/report/${analysisId}`);
+      const baseUrl = apiUrl.startsWith("http") ? apiUrl : `https://${apiUrl}`;
+      const downloadUrl = new URL(`${baseUrl}/api/v1/report/${analysisId}`);
       if (user) {
         downloadUrl.searchParams.append("u", user.id);
       }

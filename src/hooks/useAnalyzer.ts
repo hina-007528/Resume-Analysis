@@ -51,7 +51,11 @@ export const useAnalyzer = () => {
     formData.append('user_id', resolvedUserId);
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/analyze`, formData, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL?.startsWith("http")
+        ? process.env.NEXT_PUBLIC_API_URL
+        : `https://${process.env.NEXT_PUBLIC_API_URL}`;
+
+      const response = await axios.post(`${apiUrl}/api/v1/analyze`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
